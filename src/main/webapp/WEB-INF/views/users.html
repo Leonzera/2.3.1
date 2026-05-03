@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>User Management</title>
+</head>
+<body>
+
+<h1>User Management</h1>
+
+<!-- Блок для предупреждения о редактировании и кнопка сброса -->
+<div th:if="${editUser != null}">
+  Editing User: <span th:text="${editUser.name}">Name</span>
+  <a href="/users">Cancel Edit</a>
+</div>
+
+<!-- Универсальная форма: Добавление или Обновление -->
+<div>
+  <h2 th:text="${editUser == null} ? 'Add New User' : 'Edit User'">Form</h2>
+
+  <form th:action="@{/users}" method="post">
+    <input type="hidden" name="id" th:value="${editUser != null ? editUser.id : ''}" />
+
+    <label>Имя:</label>
+    <input type="text" name="name" th:value="${editUser != null ? editUser.name : ''}" placeholder="Enter name" required />
+    <br/>
+
+    <label>Возраст:</label>
+    <input type="number" name="age" th:value="${editUser != null ? editUser.age : ''}" placeholder="Enter age" min="0" max="150" required />
+    <br/>
+
+    <label>Email:</label>
+    <input type="email" name="email" th:value="${editUser != null ? editUser.email : ''}" placeholder="Enter email" required />
+    <br/>
+
+    <button type="submit" th:text="${editUser == null} ? 'Add' : 'Update'">Submit</button>
+  </form>
+</div>
+
+<!-- Таблица всех пользователей -->
+<h2>All Users</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Email</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.id}">1</td>
+    <td th:text="${user.name}">John</td>
+    <td th:text="${user.age}">25</td>
+    <td th:text="${user.email}">john@example.com</td>
+    <td>
+      <a th:href="@{/users(id=${user.id})}">Edit</a>
+      <form th:action="@{/users/delete}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${user.id}" />
+        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+      </form>
+    </td>
+  </tr>
+  <tr th:if="${users.empty}">
+    <td colspan="5">No users found</td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
