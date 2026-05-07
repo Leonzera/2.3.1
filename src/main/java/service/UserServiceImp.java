@@ -14,13 +14,6 @@ public class UserServiceImp implements UserService{
     @Autowired
 private UserDao userDao;
 
-
-    @Override
-    @Transactional
-    public void addUser(User user) {
-        userDao.addUser(user);
-    }
-
     @Override
     @Transactional(readOnly = true)
     public List<User> listUsers() {
@@ -35,8 +28,8 @@ private UserDao userDao;
 
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public void saveOrUpdateUser(User user) {
+        userDao.saveOrUpdateUser(user);
 
     }
 
